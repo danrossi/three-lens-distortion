@@ -11,9 +11,9 @@ import fragmentShader from "./glsl/lens-distortion.frag";
 export class LensDistortionEffect extends Effect {
 
 	constructor({
-	    distortion = new THREE.Vector2(0, 0),
-        principalPoint = new THREE.Vector2(0, 0),
-        focalLength = new THREE.Vector2(1, 1),
+	    distortion = new Vector2(0, 0),
+        principalPoint = new Vector2(0, 0),
+        focalLength = new Vector2(1, 1),
         skew = 0,
 	} = {}) {
 
