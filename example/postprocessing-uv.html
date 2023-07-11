@@ -172,6 +172,8 @@
 
             renderer = new WebGLRenderer();
 
+            renderer.setClearAlpha(0);
+
             renderer.xr.setReferenceSpaceType('local');
             renderer.xr.enabled = true;
             renderer.xr.addEventListener("sessionstart", onSessionStart);
