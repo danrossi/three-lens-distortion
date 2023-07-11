@@ -18,12 +18,19 @@ export class LensDistortionEffect extends Effect {
 	} = {}) {
 
 		super("LensDistortionEffect", fragmentShader, {
-			uniforms: new Map([
+			/*uniforms: new Map([
 				//["tDiffuse", new Uniform(null)],
 				["uK0", new Uniform(distortion)], // radial distortion coeff 0 // radial distortion coeff of term r^2
                 ["uCc", new Uniform(principalPoint)],
                 ["uFc", new Uniform(focalLength)],
                 ["uAlpha_c", new Uniform(skew)],
+			])*/
+            uniforms: new Map([
+				//["tDiffuse", new Uniform(null)],
+				["distortion", new Uniform(distortion)], // radial distortion coeff 0 // radial distortion coeff of term r^2
+                ["principalPoint", new Uniform(principalPoint)],
+                ["focalLength", new Uniform(focalLength)],
+                ["skew", new Uniform(skew)],
 			])
 		});
 
