@@ -25,10 +25,9 @@
     <script type="importmap">
 			{
 				"imports": {
-					"three": "../node_modules/three/build/three.module.js",
-                    "three/addons/": "../node_modules/three/examples/jsm/",
+					"three": "./three.module.js",
                     "three-lens-distortion": "../build/postprocessing-lens-distortion.module.js",
-                    "postprocessing": "../node_modules/postprocessing/build/index.js"
+                    "postprocessing": "./postprocessing.module.js"
 				}
 			}
 		</script>
@@ -49,11 +48,11 @@
             WebGLRenderer,
             Mesh,
             MathUtils,
-            Vector2
+            Vector2,
+            VRButton
         } from 'three';
         
-        import { VRButton } from 'three/addons/webxr/VRButton.js';
-
+      
         import {
             BlendFunction,
             EffectComposer,
