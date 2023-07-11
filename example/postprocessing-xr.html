@@ -14,7 +14,7 @@
 </head>
 
 <body>
-   
+
 
     <div id="container"></div>
 
@@ -51,8 +51,8 @@
             Vector2,
             VRButton
         } from 'three';
-        
-      
+
+
         import {
             BlendFunction,
             EffectComposer,
@@ -63,7 +63,7 @@
 
         import { LensDistortionEffect } from 'three-lens-distortion';
 
-   
+
         let _requestVideoFrameCallback = false;
 
 
@@ -103,7 +103,7 @@
 
 
         let camera, scene, renderer, composer;
-       
+
         let isUserInteracting = false,
             lon = 0, lat = 0,
             phi = 0, theta = 0,
@@ -131,7 +131,7 @@
             camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
 
             scene = new Scene();
-           // scene.position.z = - 8;
+            // scene.position.z = - 8;
 
             const geometry = new SphereGeometry(500, 60, 40);
             // invert the geometry on the x-axis so that all of the faces point inward
@@ -173,6 +173,8 @@
 
             renderer.xr.setReferenceSpaceType('local');
             renderer.xr.enabled = true;
+            renderer.xr.addEventListener("sessionstart", onSessionStart);
+            renderer.xr.addEventListener("sessionend", onSessionEnded);
 
 
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -187,50 +189,71 @@
             document.body.appendChild(VRButton.createButton(renderer));
 
             const params = {
-            //distortion: new THREE.Vector2(0.5, 0.5),
-            distortion: new Vector2(.5, .5),
-            principalPoint: new Vector2(0, 0),
-            //focalLength: new THREE.Vector2(.5, .5),
-            focalLength: new Vector2(1, 1),
-            skew: 0
-        };
-        
+                //distortion: new THREE.Vector2(0.5, 0.5),
+                distortion: new Vector2(.5, .5),
+                principalPoint: new Vector2(0, 0),
+                //focalLength: new THREE.Vector2(.5, .5),
+                focalLength: new Vector2(1, 1),
+                skew: 0
+            };
+
             const effect = new LensDistortionEffect(params);
-      
+
 
             composer = new EffectComposer(renderer, {
-		frameBufferType: HalfFloatType
-	});
-
-         
-        const pass = new EffectPass(camera,
-            effect
-		);
-
-      
-
-        //effect.inverted = true;
+                frameBufferType: HalfFloatType
+            });
 
 
-        composer.addPass(new RenderPass(scene, camera));
-		composer.addPass(pass);
-
-
-        composer.setSize(window.innerWidth, window.innerHeight);
+            const pass = new EffectPass(camera,
+                effect
+            );
 
 
 
-            window.addEventListener( 'resize', onWindowResize );
+            //effect.inverted = true;
+
+
+            composer.addPass(new RenderPass(scene, camera));
+            composer.addPass(pass);
+
+
+            composer.setSize(window.innerWidth, window.innerHeight);
+
+
+
+            window.addEventListener('resize', onWindowResize);
 
             animate();
 
         }
 
-       
+        function onSessionStart(ev, event) {
+
+
+            const xrManager = renderer.xr,
+                baseReferenceSpace = xrManager.getReferenceSpace(),
+                offsetPosition = camera.position,
+                offsetRotation = camera.rotation;
+
+            const transform = new XRRigidTransform(offsetPosition, { x: 0, y: -(offsetRotation.y - 0), z: offsetRotation.z, w: offsetRotation.w }),
+                teleportSpaceOffset = baseReferenceSpace.getOffsetReferenceSpace(transform);
+
+            xrManager.setReferenceSpace(teleportSpaceOffset);
+
+        }
+        function onSessionEnded(ev, event) {
+
+
+
+
+        }
+
+
 
         function onWindowResize() {
 
-        
+
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
 
@@ -289,7 +312,7 @@
 
             camera.lookAt(0, 0, 0);
 
-
+            //renderer.render(scene, camera);
             composer.render(deltaTime);
 
 

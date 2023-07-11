@@ -61,6 +61,7 @@ export default [
 	},
 	{
 		input: './postprocessing-lib.js',
+		external: ['three'],
 		plugins: [
 			resolve()
 		],
