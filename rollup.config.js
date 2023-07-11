@@ -45,6 +45,21 @@ export default [
 		]
 	},
 	{
+		input: './three-xr-lib.js',
+		plugins: [
+			resolve(),
+			includePaths({
+				paths: ["./node_modules/three/examples/jsm/"]
+		  	}),
+		],
+		output: [
+			{
+				format: 'esm',
+				file: 'example/three-xr.module.js'
+			}
+		]
+	},
+	{
 		input: './postprocessing-lib.js',
 		plugins: [
 			resolve()
