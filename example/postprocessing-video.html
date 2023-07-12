@@ -26,7 +26,7 @@
     <script type="importmap">
 			{
 				"imports": {
-					"three": "./three.module.js",
+					"three": "./three-xr.module.js",
                     "three-lens-distortion": "../build/postprocessing-lens-distortion.module.js",
                     "postprocessing": "./postprocessing.module.js"
 				}
@@ -177,7 +177,6 @@
 
             renderer = new WebGLRenderer();
             renderer.setClearAlpha(0);
-            renderer.useLegacyLights = false;
 
             renderer.xr.setReferenceSpaceType('local');
             renderer.xr.enabled = true;

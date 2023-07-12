@@ -34,22 +34,10 @@ export default [
 		plugins: [
 			resolve(),
 			includePaths({
-				paths: ["./node_modules/three/examples/jsm/"]
-		  	}),
-		],
-		output: [
-			{
-				format: 'esm',
-				file: 'example/three.module.js'
-			}
-		]
-	},
-	{
-		input: './three-xr-lib.js',
-		plugins: [
-			resolve(),
-			includePaths({
-				paths: ["./node_modules/three/examples/jsm/"]
+				paths: ["./three.js/examples/jsm/"],
+				include: {
+		  			'three': './three.js/build/three.module.js'
+				}
 		  	}),
 		],
 		output: [
@@ -63,7 +51,12 @@ export default [
 		input: './postprocessing-lib.js',
 		external: ['three'],
 		plugins: [
-			resolve()
+			resolve(),
+			includePaths({
+				include: {
+		  			'postprocessing': './postprocessing/build/index.js'
+				}
+		  	}),
 		],
 		output: [
 			{
