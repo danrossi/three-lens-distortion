@@ -190,9 +190,6 @@
 
             container.appendChild(renderer.domElement);
 
-            document.addEventListener('pointerdown', onPointerDown);
-            document.addEventListener('pointermove', onPointerMove);
-            document.addEventListener('pointerup', onPointerUp);
 
             document.body.appendChild(VRButton.createButton(renderer));
 
@@ -279,64 +276,14 @@
 
         }
 
-        function onPointerDown(event) {
-
-            isUserInteracting = true;
-
-            onPointerDownPointerX = event.clientX;
-            onPointerDownPointerY = event.clientY;
-
-            onPointerDownLon = lon;
-            onPointerDownLat = lat;
-
-        }
-
-        function onPointerMove(event) {
-
-            if (isUserInteracting === true) {
-
-                lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
-                lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
-
-            }
-
-        }
-
-        function onPointerUp() {
-
-            isUserInteracting = false;
-
-        }
-
-        let animID;
 
         function animate() {
-
             renderer.setAnimationLoop(update);
-
         }
 
         function update(deltaTime) {
-
-            /*lat = Math.max(- 85, Math.min(85, lat));
-            phi = MathUtils.degToRad(90 - lat);
-            theta = MathUtils.degToRad(lon);
-
-            camera.position.x = distance * Math.sin(phi) * Math.cos(theta);
-            camera.position.y = distance * Math.cos(phi);
-            camera.position.z = distance * Math.sin(phi) * Math.sin(theta);
-
-            camera.lookAt(0, 0, 0);*/
-
             controls.update();
-
-
-            //renderer.render(scene, camera);
-
-
             composer.render(deltaTime);
-
-
         }
 
     </script>
