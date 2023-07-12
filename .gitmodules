@@ -1,3 +1,7 @@
 [submodule "postprocessing"]
 	path = postprocessing
 	url = https://github.com/danrossi/postprocessing.git
+[submodule "three.js"]
+	path = three.js
+	url = https://github.com/CodyJasonBennett/three.js
+	branch = fix/offscreen-webxr
