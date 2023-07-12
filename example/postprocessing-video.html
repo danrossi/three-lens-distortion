@@ -175,7 +175,12 @@
             const mesh = new Mesh(geometry, material);
             scene.add(mesh);
 
-            renderer = new WebGLRenderer();
+            renderer = new WebGLRenderer({
+                powerPreference: "high-performance",
+                antialias: false,
+                stencil: false,
+                depth: false
+            });
             renderer.setClearAlpha(0);
 
             renderer.xr.setReferenceSpaceType('local');
@@ -204,7 +209,8 @@
                 //distortion: new THREE.Vector2(0.5, 0.5),
                 distortion: new Vector2(.5, .5),
                 principalPoint: new Vector2(0, 0),
-                //focalLength: new THREE.Vector2(.5, .5),
+                //focalLength: new Vector2(.5, .5),
+                //focalLength: new Vector2(.99, .99),
                 focalLength: new Vector2(1, 1),
                 skew: 0
             };

@@ -62,7 +62,8 @@
       BackSide,
       VRButton,
       Color,
-      OrbitControls
+      OrbitControls,
+      SRGBColorSpace
     } from 'three';
 
 
@@ -84,7 +85,13 @@
 
     // ---- renderer
 
-    const renderer = new WebGLRenderer();
+    const renderer = new WebGLRenderer({
+      powerPreference: "high-performance",
+      antialias: false,
+      stencil: false,
+      depth: false
+    });
+
     renderer.setClearAlpha(0);
 
     renderer.xr.setReferenceSpaceType('local');
@@ -93,6 +100,8 @@
     renderer.xr.addEventListener("sessionend", onSessionEnded);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderer.outputColorSpace = SRGBColorSpace;
 
     const canvas = renderer.domElement;
     document.body.append(canvas);
@@ -109,7 +118,7 @@
     camera.layers.enable(1);
 
     controls.enableDamping = true;
-    
+
     // ---- build scene
 
     const scene = new Scene();
@@ -120,8 +129,10 @@
 
     const url0 = 'https://rawcdn.githack.com/mrdoob/three.js/r128/examples/textures/floors/FloorsCheckerboard_S_Diffuse.jpg';
     const tex0 = new TextureLoader().load(url0);
+    tex0.colorSpace = SRGBColorSpace;
     const url1 = 'https://rawcdn.githack.com/mrdoob/three.js/r128/examples/textures/floors/FloorsCheckerboard_S_Normal.jpg';
     const tex1 = new TextureLoader().load(url1);
+    tex1.colorSpace = SRGBColorSpace;
     const room = new Mesh(
       new BoxGeometry(8, 8, 8),
       new MeshStandardMaterial({ map: tex0, normalMap: tex1, side: BackSide })
@@ -185,7 +196,7 @@
     });
 
     // ----- render loop
- 
+
     renderer.setAnimationLoop((t) => {
       //renderer.render(scene, camera);
       controls.update();
@@ -209,7 +220,7 @@
       const transform = new XRRigidTransform(offsetPosition, { x: 0, y: -(offsetRotation.y - 0), z: offsetRotation.z, w: offsetRotation.w }),
         teleportSpaceOffset = baseReferenceSpace.getOffsetReferenceSpace(transform);
 
-     // xrManager.setReferenceSpace(teleportSpaceOffset);
+      // xrManager.setReferenceSpace(teleportSpaceOffset);
 
     }
 
