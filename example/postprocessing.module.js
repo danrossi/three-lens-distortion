@@ -1,7 +1,7 @@
 import { REVISION, Camera, Color, Vector3, Matrix4, ShaderMaterial, Uniform, NoBlending, Vector2, PerspectiveCamera, BasicDepthPacking, Vector4, RGBADepthPacking, LessDepth, UnsignedByteType, Scene, Mesh, WebGLRenderTarget, LinearFilter, NearestFilter, EventDispatcher, BackSide, DoubleSide, FrontSide, MeshDepthMaterial, FloatType, MeshNormalMaterial, DepthTexture, DepthStencilFormat, UnsignedInt248Type, UnsignedIntType, DataTexture, LuminanceFormat, RGBAFormat, RepeatWrapping, HalfFloatType, Data3DTexture, ClampToEdgeWrapping, LoadingManager, sRGBEncoding, EqualDepth, NotEqualDepth, Texture, LinearMipmapLinearFilter, Loader, FileLoader, LinearEncoding, GreaterDepth, GreaterEqualDepth, LessEqualDepth, AlwaysDepth, NeverDepth, BufferGeometry, BufferAttribute, Material, RedFormat, RGFormat } from 'three';
 
 /**
- * postprocessing v6.32.2 build Wed Jul 12 2023
+ * postprocessing v6.32.2 build Thu Jul 13 2023
  * https://github.com/pmndrs/postprocessing
  * Copyright 2015-2023 Raoul van Rüschen
  * @license Zlib
@@ -5579,7 +5579,10 @@ var RenderPass = class extends Pass {
     if (this.overrideMaterialManager !== null) {
       this.overrideMaterialManager.render(renderer, scene, camera);
     } else {
+      const xrEnabled = renderer.xr.enabled;
+      renderer.xr.enabled = true;
       renderer.render(scene, camera);
+      renderer.xr.enabled = xrEnabled;
     }
     camera.layers.mask = mask;
     scene.background = background;
