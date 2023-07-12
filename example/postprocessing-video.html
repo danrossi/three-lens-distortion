@@ -50,7 +50,10 @@
             Mesh,
             MathUtils,
             Vector2,
-            VRButton
+            Vector3,
+            VRButton,
+            Color,
+            OrbitControls
         } from 'three';
 
 
@@ -62,7 +65,7 @@
         } from "postprocessing";
 
 
-        import { LensDistortionUvEffect as LensDistortionEffect } from 'three-lens-distortion';
+        import { LensDistortionEffect } from 'three-lens-distortion';
 
 
         let _requestVideoFrameCallback = false;
@@ -103,17 +106,7 @@
         }
 
 
-        let camera, scene, renderer, composer;
-
-        let isUserInteracting = false,
-            lon = 0, lat = 0,
-            phi = 0, theta = 0,
-            onPointerDownPointerX = 0,
-            onPointerDownPointerY = 0,
-            onPointerDownLon = 0,
-            onPointerDownLat = 0;
-
-        const distance = 50;
+        let camera, scene, renderer, composer, controls;
 
         const video = document.getElementById('video');
         video.src = "//videos.electroteque.org/360/ultra_light_flight_720p.mp4";
@@ -125,13 +118,25 @@
         });
 
 
+        function positionCamera() {
+            const pos = (Math.PI / 2);
+            camera.position.x = -pos;
+        }
+
+
         async function init() {
 
             const container = document.getElementById('container');
 
-            camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+            camera = new PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 10000);
+            camera.target = new Vector3(0, 0, 0);
+            camera.rotation.reorder('YXZ');
+            camera.layers.enable(1);
+            positionCamera();
+
 
             scene = new Scene();
+            scene.background = new Color(0x000000);
             // scene.position.z = - 8;
 
             const geometry = new SphereGeometry(500, 60, 40);
@@ -171,8 +176,8 @@
             scene.add(mesh);
 
             renderer = new WebGLRenderer();
-
             renderer.setClearAlpha(0);
+            renderer.useLegacyLights = false;
 
             renderer.xr.setReferenceSpaceType('local');
             renderer.xr.enabled = true;
@@ -185,11 +190,16 @@
 
             container.appendChild(renderer.domElement);
 
-            document.addEventListener('pointerdown', onPointerDown);
-            document.addEventListener('pointermove', onPointerMove);
-            document.addEventListener('pointerup', onPointerUp);
-
             document.body.appendChild(VRButton.createButton(renderer));
+
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 100;
+            controls.maxDistance = 500;
+            controls.maxPolarAngle = Math.PI / 2;
 
             const params = {
                 //distortion: new THREE.Vector2(0.5, 0.5),
@@ -245,11 +255,10 @@
             xrManager.setReferenceSpace(teleportSpaceOffset);
 
         }
+
         function onSessionEnded(ev, event) {
-
-
-
-
+            camera.position.copy(camera.target);
+            positionCamera();
         }
 
 
@@ -266,37 +275,8 @@
 
         }
 
-        function onPointerDown(event) {
-
-            isUserInteracting = true;
-
-            onPointerDownPointerX = event.clientX;
-            onPointerDownPointerY = event.clientY;
-
-            onPointerDownLon = lon;
-            onPointerDownLat = lat;
-
-        }
-
-        function onPointerMove(event) {
-
-            if (isUserInteracting === true) {
-
-                lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
-                lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
-
-            }
-
-        }
-
-        function onPointerUp() {
-
-            isUserInteracting = false;
-
-        }
-
-        let animID;
-
+        
+ 
         function animate() {
 
             renderer.setAnimationLoop(update);
@@ -305,15 +285,7 @@
 
         function update(deltaTime) {
 
-            lat = Math.max(- 85, Math.min(85, lat));
-            phi = MathUtils.degToRad(90 - lat);
-            theta = MathUtils.degToRad(lon);
-
-            camera.position.x = distance * Math.sin(phi) * Math.cos(theta);
-            camera.position.y = distance * Math.cos(phi);
-            camera.position.z = distance * Math.sin(phi) * Math.sin(theta);
-
-            camera.lookAt(0, 0, 0);
+            controls.update();
 
 
             //renderer.render(scene, camera);

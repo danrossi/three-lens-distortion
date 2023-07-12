@@ -1,1 +1,1 @@
-export { LensDistortionImageEffect, LensDistortionUvEffect } from './LensDistortionEffect.js'
+export { LensDistortionEffect } from './LensDistortionEffect.js'

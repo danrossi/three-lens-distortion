@@ -2,14 +2,12 @@ import { Uniform, Vector2 } from "three";
 import { Effect } from "postprocessing";
 
 
-import fragmentUvShader from "./glsl/lens-distortion-uv.frag";
-import fragmentImageShader from "./glsl/lens-distortion-image.frag";
+import fragmentShader from "./glsl/lens-distortion.frag";
 
 /**
  * Lens distortion effect.
  */
-
-export class LensDistortionImageEffect extends Effect {
+export class LensDistortionEffect extends Effect {
 
 	constructor({
 	    distortion = new Vector2(0, 0),
@@ -18,7 +16,7 @@ export class LensDistortionImageEffect extends Effect {
         skew = 0,
 	} = {}) {
 
-		super("LensDistortionImageEffect", fragmentImageShader, {
+		super("LensDistortionEffect", fragmentShader, {
             uniforms: new Map([
 				["distortion", new Uniform(distortion)], // radial distortion coeff 0 // radial distortion coeff of term r^2
                 ["principalPoint", new Uniform(principalPoint)],
@@ -30,27 +28,52 @@ export class LensDistortionImageEffect extends Effect {
 	
 	}
 
-}
+	get distortion() {
 
-export class LensDistortionUvEffect extends Effect {
+		return this.uniforms.get("distortion").value;
 
-	constructor({
-	    distortion = new Vector2(0, 0),
-        principalPoint = new Vector2(0, 0),
-        focalLength = new Vector2(1, 1),
-        skew = 0,
-	} = {}) {
+	}
 
-		super("LensDistortioUvnEffect", fragmentUvShader, {
-            uniforms: new Map([
-				["distortion", new Uniform(distortion)], // radial distortion coeff 0 // radial distortion coeff of term r^2
-                ["principalPoint", new Uniform(principalPoint)],
-                ["focalLength", new Uniform(focalLength)],
-                ["skew", new Uniform(skew)],
-			])
-		});
+	set distortion(value) {
 
-	
+		this.uniforms.get("distortion").value = value;
+
+	}
+
+	get principalPoint() {
+
+		return this.uniforms.get("principalPoint").value;
+
+	}
+
+	set principalPoint(value) {
+
+		this.uniforms.get("principalPoint").value = value;
+
+	}
+
+	get focalLength() {
+
+		return this.uniforms.get("focalLength").value;
+
+	}
+
+	set focalLength(value) {
+
+		this.uniforms.get("focalLength").value = value;
+
+	}
+
+	get skew() {
+
+		return this.uniforms.get("skew").value;
+
+	}
+
+	set skew(value) {
+
+		this.uniforms.get("skew").value = value;
+
 	}
 
 }

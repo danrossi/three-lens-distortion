@@ -26,6 +26,6 @@ void mainUv(inout vec2 uv) {
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
 
-	outputColor = vec4(border(uv) * inputColor.rgb, inputColor.a);
+	outputColor = border(uv) * inputColor;
 
 }
